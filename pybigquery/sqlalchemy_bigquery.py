@@ -488,6 +488,15 @@ class BigQueryDialect(DefaultDialect):
                 else:
                     table_name = t.table_id
                 result.append(table_name)
+
+            models = connection.connection._client.list_models(d.reference)
+            for m in models:
+                result.append({
+                  'name': m.model_id,
+                  'comment': m.friendly_name,
+                  'type': 'model'
+                })
+
         return result
 
     def do_rollback(self, dbapi_connection):
